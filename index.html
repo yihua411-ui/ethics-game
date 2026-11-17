@@ -17,18 +17,18 @@ body{margin:0}
   --bg:#EEEBE3; --panel:#FFFFFF; --ink:#22302E; --muted:#66706C; --line:#D5D0C4; --soft:#F7F5F0;
   --note:#F2C14E; --note-ink:#3A2C05;
   --co:#2F6F66; --ps:#7A4E8C;
-  --e1:#2E7D4F; --e2:#C27C1E; --e3:#3F5FA8; --e4:#A23C3C; --e5:#8A4F78; --e6:#4F6168;
+  --e1:#2E7D4F; --e2:#C27C1E; --e3:#3F5FA8; --e4:#A23C3C; --e5:#8A4F78; --e6:#4F6168; --e7:#7A6A3E;
   --display:"LXGW WenKai TC","Noto Sans TC","PingFang TC","Microsoft JhengHei",serif;
   --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#171C1B; --panel:#212827; --ink:#E8ECEA; --muted:#9EA8A4; --line:#35403D; --soft:#1C2221;
   --note:#E6B640; --note-ink:#2A2003; --co:#4A9A8E; --ps:#A57BB8;
-  --e1:#46A86F; --e2:#D9963A; --e3:#6683CC; --e4:#CC5C5C; --e5:#B97BA6; --e6:#8197A0; color-scheme:dark}}
+  --e1:#46A86F; --e2:#D9963A; --e3:#6683CC; --e4:#CC5C5C; --e5:#B97BA6; --e6:#8197A0; --e7:#B3A06A; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#171C1B; --panel:#212827; --ink:#E8ECEA; --muted:#9EA8A4; --line:#35403D; --soft:#1C2221;
   --note:#E6B640; --note-ink:#2A2003; --co:#4A9A8E; --ps:#A57BB8;
-  --e1:#46A86F; --e2:#D9963A; --e3:#6683CC; --e4:#CC5C5C; --e5:#B97BA6; --e6:#8197A0; color-scheme:dark}
+  --e1:#46A86F; --e2:#D9963A; --e3:#6683CC; --e4:#CC5C5C; --e5:#B97BA6; --e6:#8197A0; --e7:#B3A06A; color-scheme:dark}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
 .wrap{max-width:1280px;margin:0 auto;padding-block:20px 28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px;min-height:100%;box-sizing:border-box}
@@ -120,6 +120,13 @@ input.name{width:100%;box-sizing:border-box;padding:14px;border:2px solid var(--
 .mygrades > div{display:flex;gap:10px;align-items:center;min-width:0}
 .gchip{width:48px;height:48px;flex:none;border-radius:12px;color:#fff;display:grid;place-items:center;font-family:var(--display);font-size:28px;font-weight:700}
 @media (max-width:520px){.mygrades{grid-template-columns:1fr}}
+
+.scorebox{display:flex;flex-direction:column;gap:8px;background:var(--soft);border-radius:12px;padding:12px 14px}
+.deltas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.delta{display:flex;flex-direction:column;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0;font-size:13px}
+.delta b{font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
+.delta.up b{color:var(--e1)} .delta.down b{color:var(--e4)} .delta.flat b{color:var(--muted)}
+.endrow.me span{font-weight:700}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 .joinbar{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
@@ -252,14 +259,14 @@ const GRADES = [
 ];
 function gradeOf(score){ return GRADES.findIndex(x=>score>=x.min); }
 
-/* 結局稱號（依三個分數是否達 60 分決定） */
+/* 結局（輔導風格）：依三個分數是否達 60 分決定，每種都寫出優勢和下一步 */
 const ENDINGS = [
- {n:"穩穩的陪伴者", d:"孩子信任你，你守住了專業，家長和學校也願意和你合作。", c:"--e1"},
- {n:"越界的拯救者", d:"孩子很依賴你，但界線已經模糊，專業上的風險正在累積。", c:"--e2"},
- {n:"孤軍奮戰的守護者", d:"孩子信任你，你也守住了專業，但家長和學校還沒有站到你這一邊。", c:"--e3"},
- {n:"學校的好幫手、孩子的陌生人", d:"大人們很滿意你的配合，孩子卻不再對你說真話。", c:"--e5"},
- {n:"照章辦事的守門人", d:"程序都做對了，但孩子不再來找你，大人們也沒有感受到你的支持。", c:"--e6"},
- {n:"失守的關係", d:"孩子沒有得到保護，也不再信任輔導，合作關係也斷了。", c:"--e4"}
+ {n:"穩定的同行者", s:"孩子信任你，你守住了專業，家長和老師也願意和你合作。", g:"繼續保持，並把你的做法分享給夥伴。", c:"--e1"},
+ {n:"溫暖的守護者", s:"你很能接住孩子，孩子願意靠近你。", g:"練習在溫暖裡畫出清楚的界線，讓關係走得更長久。", c:"--e2"},
+ {n:"專注的陪伴者", s:"孩子信任你，你也守住了專業。", g:"試著把家長和老師拉進來，讓孩子身邊有更多支持。", c:"--e3"},
+ {n:"合作的橋樑", s:"你很懂得和家長、老師、行政合作。", g:"讓孩子也感受到你站在他身邊，他才願意對你說真話。", c:"--e5"},
+ {n:"謹慎的把關者", s:"你很重視規範和程序，不輕易冒險。", g:"在守住規範的同時，讓孩子和大人都感受到你的溫度。", c:"--e6"},
+ {n:"成長中的輔導者", s:"這學期遇到的挑戰很多，你都認真面對了。", g:"每一個卡住的地方，都是之後練習的起點。可以和夥伴一起回顧，看看還有哪些做法。", c:"--e7"}
 ];
 function endingOf(s){
   const C=s.c>=60, P=s.p>=60, F=s.f>=60;
@@ -282,17 +289,18 @@ function ranges(role){
 }
 const RANGE = {co:ranges("co"), ps:ranges("ps")};
 function walk(role, ans){
-  const raw={c:0,p:0,f:0}, fl={}, alt={};
+  const raw={c:0,p:0,f:0}, fl={}, alt={}, d={};
   ROLES[role].scenes.forEach((s,i)=>{
     if(s.alt && raw.c<0) alt[i]=true;
     const a=ans?.[i]; if(a==null) return;
-    const o=s.o[a];
-    raw.c+=cOf(o,fl); raw.p+=o.p||0; raw.f+=o.f||0;
+    const o=s.o[a], dc=cOf(o,fl);
+    d[i]={c:dc,p:o.p||0,f:o.f||0};
+    raw.c+=dc; raw.p+=o.p||0; raw.f+=o.f||0;
     if(o.set) fl[o.set]=true;
   });
   const sc={}, gr={};
   ["c","p","f"].forEach(k=>{ const [mn,mx]=RANGE[role][k]; sc[k]=Math.round((raw[k]-mn)/(mx-mn)*100); gr[k]=gradeOf(sc[k]); });
-  return {raw, sc, gr, end:endingOf(sc), alt};
+  return {raw, sc, gr, end:endingOf(sc), alt, d};
 }
 
 /* ================= Firebase 設定（請貼上你的設定） ================= */
@@ -422,9 +430,8 @@ function hostEnd(){
     const n=list.length, tot=Math.max(1,n);
     const dimRows=DIMS.map(d=>{
       const g=[0,0,0,0]; list.forEach(w=>g[w.gr[d.k]]++);
-      const avg=n?Math.round(list.reduce((s,w)=>s+w.sc[d.k],0)/n):null;
       return `<div class="dimrow">
-        <div class="top"><b>${d.n}</b><span class="muted">平均 ${avg==null?"–":avg} 分</span></div>
+        <b>${d.n}</b>
         <div class="gbar">${GRADES.map((x,k)=>g[k]?`<i style="flex:${g[k]};background:var(${x.c})" title="${x.g}級 ${g[k]} 人">${x.g} ${g[k]}</i>`:"").join("")||'<i style="flex:1;background:var(--soft);color:var(--muted)">尚無資料</i>'}</div>
       </div>`;
     }).join("");
@@ -448,6 +455,17 @@ function hostEnd(){
 }
 
 /* ================= 玩家畫面 ================= */
+function sgn(n){ return n>0?`+${n}`:`${n}`; }
+function scorePanel(w,i){
+  const d=w.d[i];
+  return `<div class="scorebox">
+    <span class="cap">這一題對你的影響</span>
+    <div class="deltas">${DIMS.map(x=>{const v=d?d[x.k]:0;const cls=v>0?"up":v<0?"down":"flat";return `<div class="delta ${cls}"><span>${x.n}</span><b>${v>0?"▲":v<0?"▼":"–"} ${d?sgn(v).replace("+",""):"0"}</b></div>`;}).join("")}</div>
+    <span class="cap">目前累計</span>
+    <div class="deltas">${DIMS.map(x=>`<div class="delta tot"><span>${x.n}</span><b>${sgn(w.raw[x.k])}</b></div>`).join("")}</div>
+  </div>`;
+}
+
 function playerView(){
   const mine=players[me];
   if(!mine?.name || !ROLES[mine.role]){
@@ -474,9 +492,11 @@ function playerView(){
   if(game.phase==="end"){
     const E=ENDINGS[w.end];
     return `${head}
-    <div class="ending" style="background:var(${E.c})"><span class="cap">你的結局</span><h2>${E.n}</h2><p>${E.d}</p></div>
+    <div class="ending" style="background:var(${E.c})"><span class="cap">你的輔導風格</span><h2>${E.n}</h2>
+      <p><b>你的優勢：</b>${E.s}</p><p><b>下一步：</b>${E.g}</p></div>
     <div class="card ${rc}"><h3>你的級分</h3><div class="mygrades">${DIMS.map(d=>{const G=GRADES[w.gr[d.k]];return `<div><span class="gchip" style="background:var(${G.c})">${G.g}</span><span><b>${d.n}</b><br><span class="muted">${w.sc[d.k]} 分</span></span></div>`;}).join("")}</div>
     <p class="keys">ㄅ 80 分以上・ㄆ 60–79・ㄇ 40–59・ㄈ 40 分以下</p></div>
+    <div class="card ${rc}"><h3>${R.name}組的結局分布</h3>${(()=>{const L=joined().filter(([,p])=>p.role===rc).map(([,p])=>walk(rc,ansOf(p)).end);const c=ENDINGS.map((_,k)=>L.filter(x=>x===k).length);const t=Math.max(1,L.length);return `<div class="ends">${ENDINGS.map((e,k)=>`<div class="endrow ${k===w.end?"me":""}"><span>${e.n}${k===w.end?"（你）":""}</span><b>${c[k]}</b><div class="bar"><i style="width:${c[k]/t*100}%;background:var(${e.c})"></i></div></div>`).join("")}</div><p class="keys">共 ${L.length} 人</p>`;})()}</div>
     <div class="card ${rc}"><h3>回顧你的選擇</h3><div class="review">${R.scenes.map((s,i)=>`<div><span class="cap">情境 ${i+1}・${esc(s.t)}</span><span><b>你的選擇：</b>${a[i]!=null?esc(s.o[a[i]].x):"沒有作答"}</span><span class="muted">${esc(s.k)}（${esc(s.p)}）</span></div>`).join("")}</div></div>`;
   }
   const i=game.si, s=R.scenes[i], my=a[i];
@@ -486,6 +506,7 @@ function playerView(){
     return `${head}<div class="row">${steps(i)}</div>
     <div class="card ${rc}"><span class="cap">情境 ${i+1}・${esc(s.t)}</span>
       <p><b>你的選擇：</b>${my!=null?`${label(my)}. ${esc(s.o[my].x)}`:"沒有作答"}</p>
+      ${my!=null?scorePanel(w,i):""}
       <div class="keypt"><b>倫理重點</b>（${esc(s.p)}）<br>${esc(s.k)}</div>
       <p class="muted">請看大螢幕，等待下一個情境。</p></div>`;
   }

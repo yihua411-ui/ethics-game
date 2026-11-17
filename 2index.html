@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>輔導室的一學期</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+
+/* Layout: host = projector, two role columns showing only live choice statistics; player = phone, one scene card + three choice buttons */
+:root{
+  --bg:#EEEBE3; --panel:#FFFFFF; --ink:#22302E; --muted:#66706C; --line:#D5D0C4; --soft:#F7F5F0;
+  --note:#F2C14E; --note-ink:#3A2C05;
+  --co:#2F6F66; --ps:#7A4E8C;
+  --e1:#2E7D4F; --e2:#C27C1E; --e3:#3F5FA8; --e4:#A23C3C; --e5:#8A4F78; --e6:#4F6168;
+  --display:"LXGW WenKai TC","Noto Sans TC","PingFang TC","Microsoft JhengHei",serif;
+  --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#171C1B; --panel:#212827; --ink:#E8ECEA; --muted:#9EA8A4; --line:#35403D; --soft:#1C2221;
+  --note:#E6B640; --note-ink:#2A2003; --co:#4A9A8E; --ps:#A57BB8;
+  --e1:#46A86F; --e2:#D9963A; --e3:#6683CC; --e4:#CC5C5C; --e5:#B97BA6; --e6:#8197A0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#171C1B; --panel:#212827; --ink:#E8ECEA; --muted:#9EA8A4; --line:#35403D; --soft:#1C2221;
+  --note:#E6B640; --note-ink:#2A2003; --co:#4A9A8E; --ps:#A57BB8;
+  --e1:#46A86F; --e2:#D9963A; --e3:#6683CC; --e4:#CC5C5C; --e5:#B97BA6; --e6:#8197A0; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+.wrap{max-width:1280px;margin:0 auto;padding-block:20px 28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px;min-height:100%;box-sizing:border-box}
+.wrap.phone{max-width:540px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;font-weight:700}
+p{margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer;border:none;color:inherit;background:none}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--note);outline-offset:2px}
+.btn{padding:12px 22px;border-radius:10px;font-weight:700;font-size:17px;background:var(--ink);color:var(--bg)}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn.note{background:var(--note);color:var(--note-ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.muted{color:var(--muted)}
+.cap{font-size:13px;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.kicker{display:inline-block;background:var(--note);color:var(--note-ink);padding:4px 12px;border-radius:4px;font-weight:700;letter-spacing:.08em;font-size:14px}
+.co{--rc:var(--co)} .ps{--rc:var(--ps)}
+.role-tag{display:inline-block;color:#fff;padding:3px 12px;border-radius:999px;font-weight:700;font-size:14px;background:var(--rc)}
+.prog{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:500}
+.steps{display:flex;gap:6px}
+.steps i{width:28px;height:6px;border-radius:3px;background:var(--line)}
+.steps i.on{background:var(--ink)}
+.k{font-family:var(--display);font-weight:700;width:34px;height:34px;flex:none;border-radius:8px;background:var(--rc);color:#fff;display:grid;place-items:center;font-size:19px}
+
+/* host */
+.lobby h1{font-size:clamp(38px,6vw,72px);line-height:1.1}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.col{border-top:6px solid var(--rc)}
+.col h3{font-size:clamp(22px,2.4vw,30px);line-height:1.35}
+.bigcount{font-family:var(--display);font-size:56px;line-height:1;font-variant-numeric:tabular-nums}
+.names{display:flex;flex-wrap:wrap;gap:6px}
+.names span{background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-weight:500;font-size:15px}
+.wait-big{font-family:var(--display);font-size:clamp(24px,3vw,36px);color:var(--muted)}
+.answered{font-family:var(--display);font-size:clamp(40px,5vw,64px);line-height:1;font-variant-numeric:tabular-nums}
+.stats{display:flex;flex-direction:column;gap:14px}
+.stat{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center}
+.sbar{height:34px;border-radius:8px;background:var(--soft);border:1px solid var(--line);overflow:hidden}
+.sbar i{display:block;height:100%;background:var(--rc);transition:width .5s}
+.pct{font-family:var(--display);font-size:clamp(22px,2.4vw,32px);font-variant-numeric:tabular-nums;min-width:3.2ch;text-align:right}
+.cnt{font-variant-numeric:tabular-nums;color:var(--muted);min-width:3.5ch;text-align:right}
+.actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.ends{display:flex;flex-direction:column;gap:10px}
+.endrow{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+.endrow .bar{grid-column:1/-1;height:12px;border-radius:6px;background:var(--soft);overflow:hidden}
+.endrow .bar i{display:block;height:100%}
+.endrow b{font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
+.avg{font-family:var(--display);font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.keys{font-size:13px;color:var(--muted)}
+kbd{font-family:var(--body);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--panel)}
+
+/* player */
+input.name{width:100%;box-sizing:border-box;padding:14px;border:2px solid var(--line);border-radius:10px;background:var(--soft);color:var(--ink);font:inherit;font-size:20px}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pick button{border:2px solid var(--line);border-radius:12px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:4px;background:var(--panel)}
+.pick button b{font-family:var(--display);font-size:20px;color:var(--rc)}
+.pick button span{font-size:14px;color:var(--muted)}
+.pick button[aria-pressed="true"]{border-color:var(--rc);box-shadow:0 0 0 3px var(--rc) inset}
+.pscene{font-size:18px}
+.popts{display:flex;flex-direction:column;gap:10px}
+.popt{display:flex;gap:12px;align-items:flex-start;text-align:left;padding:14px;border-radius:12px;background:var(--panel);border:2px solid var(--line);font-size:17px}
+.popts.locked .popt{opacity:.4}
+.popts.locked .popt.mine{opacity:1;border-color:var(--rc);box-shadow:0 0 0 2px var(--rc)}
+.popt:disabled{cursor:default}
+.keypt{border-left:5px solid var(--note);background:var(--soft);padding:12px 16px;border-radius:0 10px 10px 0}
+.keypt b{font-family:var(--display)}
+.ending{border-radius:16px;padding:24px 22px;color:#fff;display:flex;flex-direction:column;gap:8px}
+.ending h2{font-size:32px}
+.ending .score{font-family:var(--display);font-size:56px;line-height:1;font-variant-numeric:tabular-nums}
+.ending .cap{color:#fff;opacity:.85}
+.review{display:flex;flex-direction:column;gap:12px}
+.review > div{border-left:4px solid var(--rc);padding-left:12px;display:flex;flex-direction:column;gap:2px}
+.notice{background:var(--soft);border:1px dashed var(--line);border-radius:10px;padding:12px 16px;font-size:15px;color:var(--muted)}
+
+@media (max-width:860px){ .duo{grid-template-columns:1fr} }
+@media (max-width:520px){ .pick{grid-template-columns:1fr} .stat{grid-template-columns:auto 1fr auto} .stat .cnt{display:none} }
+
+.stat2{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+.stxt{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:clamp(15px,1.4vw,18px);line-height:1.5}
+.stxt .sbar{height:18px}
+.snum{display:flex;flex-direction:column;align-items:flex-end;line-height:1.1}
+.dims{display:flex;flex-direction:column;gap:14px}
+.dimrow{display:flex;flex-direction:column;gap:6px}
+.gbar{display:flex;height:34px;border-radius:8px;overflow:hidden;gap:2px}
+.gbar i{display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-weight:700;font-family:var(--display);font-size:17px;min-width:44px;white-space:nowrap}
+.mygrades{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mygrades > div{display:flex;gap:10px;align-items:center;min-width:0}
+.gchip{width:48px;height:48px;flex:none;border-radius:12px;color:#fff;display:grid;place-items:center;font-family:var(--display);font-size:28px;font-weight:700}
+@media (max-width:520px){.mygrades{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.joinbar{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+.qr{background:#FFFFFF;padding:12px;border-radius:12px;border:1px solid var(--line);width:200px;height:200px}
+.qr img,.qr canvas{display:block}
+.url{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:clamp(15px,1.6vw,20px);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-top:12px;overflow-wrap:anywhere}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--soft);padding:1px 5px;border-radius:4px}
+@media (max-width:760px){.joinbar{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><div class="card"><h2>輔導室的一學期</h2><p class="muted">正在連線…</p></div></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+
+/* ================= 劇本 ================= */
+/* 每個選項：c = 孩子信任、p = 專業度、f = 親師信任
+   cf:"notify" 表示孩子信任依前面的選擇而定（完成知後同意 +1、許下絕對保密 −2、其他 −1） */
+const ROLES = {
+ co:{name:"專輔教師", who:"國中輔導室，天天和學生、導師、學務處相處", intro:"你是國中的專任輔導教師。個案是國二的小恩。",
+  scenes:[
+   {t:"非自願個案（開學）",
+    x:"導師把小恩轉介過來，理由是他「常常上課趴睡、跟同學起衝突」。小恩一坐下就說：「我又沒怎樣，為什麼要來？」",
+    k:"非自願個案也有選擇的空間。先說明轉介原因、輔導能做什麼，以及保密的範圍和例外，知後同意是信任的起點。",
+    p:"自主、受益",
+    o:[{x:"說明為什麼他被轉介、輔導可以做什麼、他可以決定要談什麼，也說明保密的範圍和例外。",c:1,p:2,f:1,set:"consent"},
+       {x:"「這是學校的安排，每週這個時間都要來。」",c:-2,p:-1,f:1},
+       {x:"「沒關係，不想講也可以，我們先隨便聊聊。」不提保密規則。",c:1,p:-1,f:0}]},
+   {t:"保密的承諾",
+    x:"小恩說：「我跟你講的話，你不要跟任何人說喔。」",
+    k:"不許下做不到的承諾。一開始就講清楚保密的例外，日後真的必須揭露時，關係才承受得住。",
+    p:"忠誠",
+    o:[{x:"「我會保密，但如果有人受傷或有危險，我必須讓其他人知道，而且我會先跟你說。」",c:1,p:2,f:0},
+       {x:"「放心，我絕對不會說。」",c:2,p:-2,f:0,set:"promise"},
+       {x:"「這要看情況。」然後換話題。",c:-1,p:0,f:0}]},
+   {t:"雙重關係",
+    x:"這學期你兼任小恩班上的綜合活動課。小恩作業沒交，還在課堂上頂撞你。",
+    k:"兼課會形成雙重關係。評分要公平，兩個角色要分開說清楚，也不能讓晤談內容出現在課堂上。",
+    p:"公正、免受傷害",
+    o:[{x:"依照評分標準處理；課後找他談時，把「任課老師」和「輔導老師」兩個角色分開說清楚。",c:1,p:2,f:1},
+       {x:"你知道他家裡的狀況，作業就算了，直接給及格。",c:1,p:-2,f:-1},
+       {x:"在全班面前糾正他：「你在輔導室明明不是這樣。」",c:-2,p:-2,f:0}]},
+   {t:"家長要資訊",
+    x:"小恩的媽媽打電話來：「他到底跟你說了什麼？我是他媽媽，我有權知道。」",
+    k:"家長有權利也有關心。在保密和家長參與之間找方法，例如提供一般性的建議、邀請三方會談。",
+    p:"忠誠、受益",
+    o:[{x:"肯定媽媽的關心，說明保密原則，給一些在家可以怎麼陪伴的建議，並詢問小恩是否願意三方會談。",c:1,p:2,f:2},
+       {x:"把晤談內容大致告訴媽媽。",c:-2,p:-1,f:1,promiseExtra:-1},
+       {x:"「這是保密的，我不能說。」然後結束通話。",c:0,p:-1,f:-2}]},
+   {t:"法律通報：兒少保護",
+    x:"小恩手臂上有瘀青。他說是爸爸喝醉打的，「你不要通報，不然我爸會更生氣」。",
+    alt:"小恩什麼都沒跟你說。是導師發現他手臂上的瘀青來告訴你，小恩拒絕談這件事。",
+    k:"兒少保護通報是法定義務，須在 24 小時內完成，不能用保密或學生的意願取代。通報前先說明、一起擬安全計畫，可以降低關係受損。",
+    p:"免受傷害",
+    o:[{x:"依《兒少權法》在 24 小時內通報；通報前先跟小恩說明接下來會發生什麼，並和他討論安全計畫。",cf:"notify",p:2,f:1},
+       {x:"答應他先不通報，再觀察一陣子。",c:1,p:-3,f:-1},
+       {x:"直接通報，但沒有告訴小恩。",c:-2,p:0,f:1}]},
+   {t:"結案與界線（期末）",
+    x:"小恩送你一張手寫卡片，問：「暑假可以加你 LINE 嗎？你可以當我乾媽嗎？」",
+    k:"接住學生的情感，同時說明關係的界線，並安排好後續可以找誰。私人聯繫容易讓關係變得模糊。",
+    p:"受益、免受傷害",
+    o:[{x:"收下卡片並謝謝他，溫和說明關係的界線，也告訴他暑假如果需要幫忙可以找誰。",c:1,p:2,f:1},
+       {x:"加了私人 LINE：「有事隨時找我。」",c:2,p:-2,f:-1},
+       {x:"卡片和 LINE 都拒絕，不多解釋。",c:-2,p:0,f:0}]}
+  ]},
+ ps:{name:"駐區心理師", who:"每週到校一天，處理三級個案", intro:"你是每週到校一天的駐區心理師。個案是國三的小芸。",
+  scenes:[
+   {t:"非自願個案",
+    x:"學務處轉介小芸，理由是「常跟老師起衝突，請心理師處理一下，讓她乖一點」。小芸雙手抱胸，一句話也不說。",
+    k:"心理師服務的是學生的福祉，不是學校的管教目標。先和學校釐清角色，再向學生說明她能決定什麼。",
+    p:"自主、受益",
+    o:[{x:"先跟學校澄清心理師的角色和目標；再向小芸說明為什麼會見面、她可以決定什麼，以及保密的範圍和例外。",c:1,p:2,f:0,set:"consent"},
+       {x:"照學校的期待，跟小芸談她的行為要怎麼改。",c:-2,p:-1,f:2},
+       {x:"小芸不想談，就結案，回報學校「個案拒絕」。",c:-1,p:-1,f:-1}]},
+   {t:"未成年人的知後同意",
+    x:"中心規定要有家長同意書才能開始晤談，但小芸說：「我爸媽不知道我來，我也不想讓他們知道。」",
+    k:"未成年人的知後同意要兼顧法定代理人。和學生一起想辦法讓家長參與，而不是繞過家長或直接拒絕服務。",
+    p:"自主、忠誠",
+    o:[{x:"向小芸說明為什麼需要家長同意，和她討論怎麼跟家長說，必要時請專輔教師協助聯繫。",c:1,p:2,f:2},
+       {x:"同意書先不管，先談再說。",c:1,p:-2,f:-2},
+       {x:"沒有同意書就不能談，請她先回去。",c:-2,p:0,f:0}]},
+   {t:"跨專業合作與紀錄",
+    x:"專輔教師說：「我們是一起的，把你的完整紀錄給我看一下吧。」",
+    k:"跨專業合作以「最少且必要」為原則。經學生同意後，提供摘要和後續建議。",
+    p:"忠誠、受益",
+    o:[{x:"經過小芸同意後，提供摘要和後續建議。",c:1,p:2,f:1},
+       {x:"把完整紀錄交給專輔教師。",c:-1,p:-2,f:2},
+       {x:"拒絕分享任何資訊。",c:0,p:-1,f:-2}]},
+   {t:"雙重關係與利益衝突",
+    x:"小芸的媽媽知道你有私人工作室，問：「可以改去你那邊自費嗎？這樣可以談比較多次。」",
+    k:"把學校個案轉到自己的私人工作室，會構成利益衝突和雙重關係。即使家長主動提出也一樣。",
+    p:"公正、免受傷害",
+    o:[{x:"說明這樣會有利益衝突，並提供其他長期資源的轉介名單。",c:0,p:2,f:1},
+       {x:"答應，下週開始改到工作室晤談。",c:1,p:-3,f:-1},
+       {x:"答應，而且在學校也繼續見她。",c:1,p:-3,f:-1}]},
+   {t:"法律通報：兒少性剝削",
+    x:"小芸說她和網路上認識的 25 歲男生「在交往」，對方一直要她傳照片，兩人也已經見過面。",
+    alt:"小芸沒有跟你說。是專輔教師從同學那裡聽說的，小芸否認。",
+    k:"成年人要求未成年人傳私密照片、約見面，屬於兒少性剝削，責任通報人員須在 24 小時內通報。但通報不代表可以把細節告訴所有人。",
+    p:"免受傷害、忠誠",
+    o:[{x:"依法在 24 小時內通報；事前向小芸說明原因和流程，並陪她面對後續。",cf:"notify",p:2,f:1},
+       {x:"她說自己是自願的，尊重她的自主，不通報。",c:1,p:-3,f:-2},
+       {x:"通報後，也把細節告訴專輔教師和導師，「請大家多注意」。",c:-2,p:-1,f:1}]},
+   {t:"結案與轉銜",
+    x:"學校給你的服務次數到了，但小芸還需要陪伴。",
+    k:"結案要預告、要轉銜，讓學生不覺得被拋下，後續照顧也不中斷。",
+    p:"受益、忠誠",
+    o:[{x:"提早預告結案，和小芸、家長討論轉介到長期資源，做好轉銜。",c:1,p:2,f:2},
+       {x:"不告訴學校，私下延長次數。",c:1,p:-1,f:-1},
+       {x:"次數到了就結案。",c:-2,p:-1,f:0}]}
+  ]}
+};
+
+/* 三種分數 */
+const DIMS = [
+  {k:"c", n:"孩子信任"},
+  {k:"p", n:"諮商輔導專業度"},
+  {k:"f", n:"親師信任"}
+];
+/* 級分：ㄅ 80 以上、ㄆ 60–79、ㄇ 40–59、ㄈ 40 以下 */
+const GRADES = [
+  {g:"ㄅ", min:80, c:"--e1"},
+  {g:"ㄆ", min:60, c:"--e3"},
+  {g:"ㄇ", min:40, c:"--e2"},
+  {g:"ㄈ", min:-1, c:"--e4"}
+];
+function gradeOf(score){ return GRADES.findIndex(x=>score>=x.min); }
+
+/* 結局稱號（依三個分數是否達 60 分決定） */
+const ENDINGS = [
+ {n:"穩穩的陪伴者", d:"孩子信任你，你守住了專業，家長和學校也願意和你合作。", c:"--e1"},
+ {n:"越界的拯救者", d:"孩子很依賴你，但界線已經模糊，專業上的風險正在累積。", c:"--e2"},
+ {n:"孤軍奮戰的守護者", d:"孩子信任你，你也守住了專業，但家長和學校還沒有站到你這一邊。", c:"--e3"},
+ {n:"學校的好幫手、孩子的陌生人", d:"大人們很滿意你的配合，孩子卻不再對你說真話。", c:"--e5"},
+ {n:"照章辦事的守門人", d:"程序都做對了，但孩子不再來找你，大人們也沒有感受到你的支持。", c:"--e6"},
+ {n:"失守的關係", d:"孩子沒有得到保護，也不再信任輔導，合作關係也斷了。", c:"--e4"}
+];
+function endingOf(s){
+  const C=s.c>=60, P=s.p>=60, F=s.f>=60;
+  if(C) return !P ? 1 : (F ? 0 : 2);
+  if(F) return 3;
+  return P ? 4 : 5;
+}
+const NS = 6, LET = ["A","B","C"], RK=["co","ps"];
+
+/* ================= 計分 ================= */
+function cOf(o,f){ if(o.cf==="notify") return f.promise?-2 : f.consent?1:-1; return (o.c||0) + (o.promiseExtra&&f.promise?o.promiseExtra:0); }
+function ranges(role){
+  const r={c:[0,0],p:[0,0],f:[0,0]};
+  ROLES[role].scenes.forEach(s=>{
+    const cs=[]; s.o.forEach(o=>{ if(o.cf==="notify") cs.push(-2,-1,1); else { cs.push(o.c||0); if(o.promiseExtra) cs.push((o.c||0)+o.promiseExtra); } });
+    r.c[0]+=Math.min(...cs); r.c[1]+=Math.max(...cs);
+    ["p","f"].forEach(k=>{ const v=s.o.map(o=>o[k]||0); r[k][0]+=Math.min(...v); r[k][1]+=Math.max(...v); });
+  });
+  return r;
+}
+const RANGE = {co:ranges("co"), ps:ranges("ps")};
+function walk(role, ans){
+  const raw={c:0,p:0,f:0}, fl={}, alt={};
+  ROLES[role].scenes.forEach((s,i)=>{
+    if(s.alt && raw.c<0) alt[i]=true;
+    const a=ans?.[i]; if(a==null) return;
+    const o=s.o[a];
+    raw.c+=cOf(o,fl); raw.p+=o.p||0; raw.f+=o.f||0;
+    if(o.set) fl[o.set]=true;
+  });
+  const sc={}, gr={};
+  ["c","p","f"].forEach(k=>{ const [mn,mx]=RANGE[role][k]; sc[k]=Math.round((raw[k]-mn)/(mx-mn)*100); gr[k]=gradeOf(sc[k]); });
+  return {raw, sc, gr, end:endingOf(sc), alt};
+}
+
+/* ================= Firebase 設定（請貼上你的設定） ================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyBPb_91l6632daT2_9SizJ2XjUrxGrYK88",
+  authDomain: "ethics-game-799de.firebaseapp.com",
+  databaseURL: "https://ethics-game-799de-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "ethics-game-799de",
+  storageBucket: "ethics-game-799de.firebasestorage.app",
+  messagingSenderId: "309604230791",
+  appId: "1:309604230791:web:711966d7e936741b3dfa22"
+};
+
+/* ================= 狀態 ================= */
+const HOSTVIEW = location.hash === "#host";
+const STUDENT_URL = location.href.split("#")[0];
+let fdb=null, me=null, isHost=false, hostUid=null, mode="loading", errMsg="";
+let game=null, players={};
+let myName="", pendingRole=null;
+
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a}
+function joined(){ return Object.entries(players).filter(([,p])=>p&&p.name&&ROLES[p.role]); }
+function ansOf(p){ return game && p.round===game.round ? (p.ans||{}) : {}; }
+function perm(role,i){ return game?.perms?.[role]?.[i] || [0,1,2]; }
+function showErr(m){ const n=$("err"); if(n){n.textContent=m;n.hidden=false;} }
+const errBox=()=>`<div id="err" class="notice" hidden></div>`;
+function steps(cur){ return `<div class="steps" aria-hidden="true">${Array.from({length:NS},(_,i)=>`<i class="${i<=cur?"on":""}"></i>`).join("")}</div>`; }
+
+/* ================= 主持人動作 ================= */
+async function setGame(g){ game=g; render(); try{ await fdb.ref("game").set(g); }catch(e){ showErr("無法更新遊戲狀態："+e.message); } }
+function startRound(){
+  const perms={}; RK.forEach(r=>perms[r]=Array.from({length:NS},()=>shuffle([0,1,2])));
+  setGame({round:"r"+Date.now().toString(36), phase:"scene", si:0, perms});
+}
+function reveal(){ if(game?.phase==="scene") setGame({...game, phase:"reveal"}); }
+function next(){ if(!game) return; if(game.si>=NS-1) setGame({...game, phase:"end"}); else setGame({...game, phase:"scene", si:game.si+1}); }
+function toLobby(){ setGame({round:game?.round||"r0", phase:"lobby", si:0}); }
+let confirmClear=false;
+async function clearPlayers(){
+  if(!confirmClear){ confirmClear=true; render(); return; }
+  confirmClear=false;
+  try{ await fdb.ref("players").remove(); await fdb.ref("game").set({round:"r"+Date.now().toString(36), phase:"lobby", si:0}); }catch(e){ showErr("清除失敗："+e.message); }
+}
+
+/* ================= 玩家動作 ================= */
+async function saveMe(doc){ players[me]=doc; render(); try{ await fdb.ref("players/"+me).set(doc); return true; }catch(e){ showErr("沒有送出成功，請檢查網路後再試一次。"); return false; } }
+function join(){
+  const name=($("nameInput")?.value||myName).trim().slice(0,20);
+  if(!name){ showErr("請先輸入名字。"); return; }
+  if(!pendingRole){ showErr("請選擇一個角色。"); return; }
+  myName=name;
+  const cur=players[me]||{};
+  saveMe({name, role:pendingRole, round:cur.round||"", ans:cur.ans||{}});
+}
+function changeRole(){ const cur=players[me]; if(!cur) return; pendingRole=cur.role; saveMe({...cur, name:""}); }
+function choose(orig){
+  if(!game||game.phase!=="scene") return;
+  const cur=players[me]; if(!cur) return;
+  const ans={...ansOf(cur)}; if(ans[game.si]!=null) return;
+  ans[game.si]=orig;
+  saveMe({...cur, round:game.round, ans});
+}
+
+/* ================= 主持人畫面 ================= */
+function hostLobby(){
+  const js=joined();
+  const col=r=>{ const list=js.filter(([,p])=>p.role===r); return `
+    <div class="card col ${r}">
+      <span class="role-tag" style="align-self:flex-start">${ROLES[r].name}組</span>
+      <div class="bigcount">${list.length}</div>
+      <div class="names">${list.map(([,p])=>`<span>${esc(p.name)}</span>`).join("")||'<span class="muted" style="border:none;background:none;padding:0">還沒有人加入</span>'}</div>
+    </div>`; };
+  return `
+  <div class="top"><span class="kicker">主持人畫面</span><a href="${esc(STUDENT_URL)}" target="_blank" rel="noopener" class="muted" style="font-size:14px">開新分頁預覽學生畫面</a></div>
+  <div class="joinbar">
+    <div class="lobby" style="min-width:0"><h1>輔導室的一學期</h1>
+      <p class="muted" style="max-width:36em;margin-top:10px">用手機掃描 QR code，或打開下面的網址，輸入名字、選擇角色就能加入，不需要登入。</p>
+      <p class="url">${esc(STUDENT_URL)}</p></div>
+    <div id="qr" class="qr" aria-label="加入遊戲的 QR code"></div>
+  </div>
+  <div class="duo">${col("co")}${col("ps")}</div>
+  <div class="actions">
+    <button class="btn ghost" data-act="clear">${confirmClear?"確定清除所有名單？再按一次":"清除名單（換新班級時用）"}</button>
+    <button class="btn note" data-act="start" ${js.length?"":"disabled"}>開始情境 1</button>
+  </div>
+  ${errBox()}`;
+}
+
+function hostScene(){
+  const i=game.si, revealed=game.phase==="reveal", js=joined();
+  const col=r=>{
+    const s=ROLES[r].scenes[i], list=js.filter(([,p])=>p.role===r);
+    const counts=[0,0,0]; let done=0;
+    list.forEach(([,p])=>{ const a=ansOf(p); if(a[i]!=null){counts[a[i]]++;done++;} });
+    const tot=Math.max(1,done);
+    const body = !revealed
+      ? `<p class="wait-big">請在手機上做選擇</p>
+         <div class="row" style="align-items:baseline;gap:10px"><span class="answered">${done}</span><span class="muted">/ ${list.length} 人已選擇</span></div>
+         <div class="sbar" style="height:12px"><i style="width:${list.length?done/list.length*100:0}%"></i></div>`
+      : `<div class="stats">${perm(r,i).map((orig,k)=>`
+          <div class="stat2"><span class="k">${LET[k]}</span>
+            <div class="stxt"><span>${esc(s.o[orig].x)}</span><div class="sbar"><i style="width:${counts[orig]/tot*100}%"></i></div></div>
+            <div class="snum"><span class="pct">${done?Math.round(counts[orig]/done*100):0}%</span><span class="cnt">${counts[orig]} 人</span></div></div>`).join("")}</div>
+         <p class="keys">共 ${done} 人作答</p>`;
+    return `<div class="card col ${r}">
+      <span class="role-tag" style="align-self:flex-start">${ROLES[r].name}組</span>
+      <h3>${esc(s.t)}</h3>${body}</div>`;
+  };
+  const last=i===NS-1;
+  return `
+  <div class="top"><div class="row"><span class="kicker">情境 ${i+1} / ${NS}</span>${steps(i)}</div><span class="prog">${revealed?"已公布":"作答中"}</span></div>
+  <div class="duo">${col("co")}${col("ps")}</div>
+  <div class="actions">
+    <button class="btn ghost" data-act="lobby">回到大廳</button>
+    ${revealed?`<button class="btn" data-act="next">${last?"看結局":"下一個情境"} →</button>`:`<button class="btn note" data-act="reveal">公布選擇</button>`}
+  </div>
+  <div class="keys"><kbd>空白鍵</kbd> 公布選擇／下一個情境</div>
+  ${errBox()}`;
+}
+
+function hostEnd(){
+  const js=joined();
+  const col=r=>{
+    const list=js.filter(([,p])=>p.role===r).map(([,p])=>walk(r,ansOf(p)));
+    const n=list.length, tot=Math.max(1,n);
+    const dimRows=DIMS.map(d=>{
+      const g=[0,0,0,0]; list.forEach(w=>g[w.gr[d.k]]++);
+      const avg=n?Math.round(list.reduce((s,w)=>s+w.sc[d.k],0)/n):null;
+      return `<div class="dimrow">
+        <div class="top"><b>${d.n}</b><span class="muted">平均 ${avg==null?"–":avg} 分</span></div>
+        <div class="gbar">${GRADES.map((x,k)=>g[k]?`<i style="flex:${g[k]};background:var(${x.c})" title="${x.g}級 ${g[k]} 人">${x.g} ${g[k]}</i>`:"").join("")||'<i style="flex:1;background:var(--soft);color:var(--muted)">尚無資料</i>'}</div>
+      </div>`;
+    }).join("");
+    const c=ENDINGS.map(()=>0); list.forEach(w=>c[w.end]++);
+    return `
+    <div class="card col ${r}">
+      <div class="top"><span class="role-tag">${ROLES[r].name}組</span><span class="prog">${n} 人</span></div>
+      <div class="dims">${dimRows}</div>
+      <span class="cap">結局分布</span>
+      <div class="ends">${ENDINGS.map((e,k)=>`<div class="endrow"><span>${e.n}</span><b>${c[k]}</b><div class="bar"><i style="width:${c[k]/tot*100}%;background:var(${e.c})"></i></div></div>`).join("")}</div>
+    </div>`;
+  };
+  return `
+  <div class="top"><span class="kicker">期末・結局</span>${steps(NS-1)}</div>
+  <h1 style="font-size:clamp(32px,4.6vw,52px)">這學期，你成為了哪一種輔導者？</h1>
+  <p class="muted">級分：ㄅ 80 分以上・ㄆ 60–79・ㄇ 40–59・ㄈ 40 分以下</p>
+  <div class="duo">${col("co")}${col("ps")}</div>
+  <p class="muted" style="max-width:46em">討論方向：三種分數之間有哪些拉扯？為什麼有些選擇讓大人滿意，孩子卻不再信任你？兩種角色卡住的地方一樣嗎？</p>
+  <div class="row"><button class="btn note" data-act="start">再玩一次</button><button class="btn ghost" data-act="lobby">回到大廳</button></div>
+  ${errBox()}`;
+}
+
+/* ================= 玩家畫面 ================= */
+function playerView(){
+  const mine=players[me];
+  if(!mine?.name || !ROLES[mine.role]){
+    const pr=pendingRole||mine?.role||null;
+    return `<span class="kicker" style="align-self:flex-start">輔導室的一學期</span>
+    <div class="card">
+      <h2>加入遊戲</h2>
+      <label class="cap" for="nameInput">你的名字</label>
+      <input id="nameInput" class="name" maxlength="20" placeholder="例如：小樺" value="${esc(myName)}" autocomplete="off">
+      <span class="cap">選擇角色</span>
+      <div class="pick">
+        <button class="co" data-role="co" aria-pressed="${pr==="co"}"><b>專輔教師</b><span>${ROLES.co.who}</span></button>
+        <button class="ps" data-role="ps" aria-pressed="${pr==="ps"}"><b>駐區心理師</b><span>${ROLES.ps.who}</span></button>
+      </div>
+      <button class="btn note" data-act="join">加入</button>
+      ${errBox()}
+    </div>`;
+  }
+  const R=ROLES[mine.role], rc=mine.role, a=ansOf(mine), w=walk(rc,a);
+  const head=`<div class="top ${rc}"><span class="role-tag">${R.name}</span><span class="prog">${esc(mine.name)}</span></div>`;
+  if(!game||game.phase==="lobby"){
+    return `${head}<div class="card ${rc}"><h2>你已加入</h2><p>${esc(R.intro)}</p><p class="muted">請看大螢幕，等待主持人開始。</p><button class="btn ghost" data-act="role" style="align-self:flex-start">換角色</button>${errBox()}</div>`;
+  }
+  if(game.phase==="end"){
+    const E=ENDINGS[w.end];
+    return `${head}
+    <div class="ending" style="background:var(${E.c})"><span class="cap">你的結局</span><h2>${E.n}</h2><p>${E.d}</p></div>
+    <div class="card ${rc}"><h3>你的級分</h3><div class="mygrades">${DIMS.map(d=>{const G=GRADES[w.gr[d.k]];return `<div><span class="gchip" style="background:var(${G.c})">${G.g}</span><span><b>${d.n}</b><br><span class="muted">${w.sc[d.k]} 分</span></span></div>`;}).join("")}</div>
+    <p class="keys">ㄅ 80 分以上・ㄆ 60–79・ㄇ 40–59・ㄈ 40 分以下</p></div>
+    <div class="card ${rc}"><h3>回顧你的選擇</h3><div class="review">${R.scenes.map((s,i)=>`<div><span class="cap">情境 ${i+1}・${esc(s.t)}</span><span><b>你的選擇：</b>${a[i]!=null?esc(s.o[a[i]].x):"沒有作答"}</span><span class="muted">${esc(s.k)}（${esc(s.p)}）</span></div>`).join("")}</div></div>`;
+  }
+  const i=game.si, s=R.scenes[i], my=a[i];
+  const text = w.alt[i] ? s.alt : s.x;
+  const label=orig=>LET[perm(rc,i).indexOf(orig)];
+  if(game.phase==="reveal"){
+    return `${head}<div class="row">${steps(i)}</div>
+    <div class="card ${rc}"><span class="cap">情境 ${i+1}・${esc(s.t)}</span>
+      <p><b>你的選擇：</b>${my!=null?`${label(my)}. ${esc(s.o[my].x)}`:"沒有作答"}</p>
+      <div class="keypt"><b>倫理重點</b>（${esc(s.p)}）<br>${esc(s.k)}</div>
+      <p class="muted">請看大螢幕，等待下一個情境。</p></div>`;
+  }
+  const locked=my!=null;
+  return `${head}<div class="row">${steps(i)}</div>
+  <div class="card ${rc}">
+    <span class="cap">情境 ${i+1} / ${NS}・${esc(s.t)}</span>
+    <p class="pscene">${esc(text)}</p>
+    <div class="popts ${locked?"locked":""}">${perm(rc,i).map((orig,k)=>`<button class="popt ${my===orig?"mine":""}" data-ch="${orig}" ${locked?"disabled":""}><span class="k">${LET[k]}</span><span>${esc(s.o[orig].x)}</span></button>`).join("")}</div>
+    ${locked?'<p class="muted">已送出，等待主持人公布。</p>':""}
+    ${errBox()}
+  </div>`;
+}
+
+/* ================= render ================= */
+function render(){
+  const el=$("app"); if(!el) return;
+  const asHost = HOSTVIEW && isHost;
+  el.className="wrap"+(asHost?"":" phone");
+  if(mode==="loading"){ el.innerHTML=`<div class="card"><h2>輔導室的一學期</h2><p class="muted">正在連線…</p></div>`; return; }
+  if(mode==="setup"){ el.innerHTML=`<div class="card"><span class="kicker" style="align-self:flex-start">還沒設定完成</span><h2>請先貼上 Firebase 設定</h2><p>打開 index.html，把最上方 <code>firebaseConfig</code> 裡的「請貼上」換成你的 Firebase 專案設定。</p></div>`; return; }
+  if(mode==="error"){ el.innerHTML=`<div class="card"><span class="kicker" style="align-self:flex-start">輔導室的一學期</span><h2>連線失敗</h2><p>請檢查網路後重新整理頁面。</p><p class="muted" style="font-size:14px">${esc(errMsg)}</p></div>`; return; }
+  if(HOSTVIEW && !isHost){ el.innerHTML=`<div class="card"><span class="kicker" style="align-self:flex-start">主持人畫面</span><h2>已經有其他裝置是主持人</h2><p>請在第一次打開主持人畫面的那台電腦和瀏覽器上操作。如果要換電腦，請到 Firebase 主控台的 Realtime Database，刪除 <code>hostUid</code> 這一項後再重新整理。</p></div>`; return; }
+  const ni=$("nameInput"); const focus=document.activeElement===ni; if(ni) myName=ni.value;
+  if(!asHost) el.innerHTML=playerView();
+  else if(!game||game.phase==="lobby") el.innerHTML=hostLobby();
+  else if(game.phase==="end") el.innerHTML=hostEnd();
+  else el.innerHTML=hostScene();
+  if(focus){ const n=$("nameInput"); if(n){n.focus(); n.setSelectionRange(n.value.length,n.value.length);} }
+  const q=$("qr"); if(q && window.QRCode){ try{ new QRCode(q,{text:STUDENT_URL,width:200,height:200,colorDark:"#22302E",colorLight:"#FFFFFF"}); }catch(e){} }
+}
+
+/* ================= events ================= */
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.role){ pendingRole=b.dataset.role; render(); return; }
+  if(b.dataset.ch!==undefined){ choose(+b.dataset.ch); return; }
+  const a=b.dataset.act;
+  if(a==="join") join();
+  if(a==="role") changeRole();
+  if(!(HOSTVIEW&&isHost)) return;
+  if(a!=="clear") confirmClear=false;
+  if(a==="start") startRound();
+  if(a==="reveal") reveal();
+  if(a==="next") next();
+  if(a==="lobby") toLobby();
+  if(a==="clear") clearPlayers();
+});
+document.addEventListener("keydown",e=>{
+  if(e.target.id==="nameInput"){ if(e.key==="Enter") join(); return; }
+  if(!(HOSTVIEW&&isHost)||e.target.tagName==="INPUT") return;
+  if((e.code==="Space"||e.key==="Enter") && game && (game.phase==="scene"||game.phase==="reveal")){
+    e.preventDefault(); game.phase==="scene"?reveal():next();
+  }
+});
+
+/* ================= boot ================= */
+(function boot(){
+  if(Object.values(firebaseConfig).some(v=>String(v).includes("請貼上")) || !firebaseConfig.databaseURL){ mode="setup"; render(); return; }
+  try{
+    firebase.initializeApp(firebaseConfig);
+    fdb=firebase.database();
+  }catch(e){ mode="error"; errMsg=e.message; render(); return; }
+  firebase.auth().onAuthStateChanged(async user=>{
+    if(!user) return;
+    me=user.uid;
+    try{
+      if(HOSTVIEW){
+        await fdb.ref("hostUid").transaction(cur=>cur||me);
+      }
+    }catch(e){}
+    fdb.ref("hostUid").on("value",s=>{ hostUid=s.val(); isHost=hostUid===me; render(); });
+    let gG=false,gP=false;
+    const ready=()=>{ if(gG&&gP&&mode==="loading") mode="ok"; render(); };
+    fdb.ref("game").on("value",s=>{ game=s.val(); gG=true; ready(); }, e=>{ mode="error"; errMsg=e.message; render(); });
+    fdb.ref("players").on("value",s=>{
+      const nx=s.val()||{};
+      if(players[me]&&!nx[me]&&mode==="loading") nx[me]=players[me];
+      players=nx; if(nx[me]?.name) myName=nx[me].name; gP=true; ready();
+    }, e=>{ mode="error"; errMsg=e.message; render(); });
+  });
+  firebase.auth().signInAnonymously().catch(e=>{ mode="error"; errMsg="匿名登入失敗（請確認 Firebase 已啟用「匿名」登入）："+e.message; render(); });
+  render();
+})();
+
+</script>
+</body>
+</html>

@@ -127,6 +127,10 @@ input.name{width:100%;box-sizing:border-box;padding:14px;border:2px solid var(--
 .delta b{font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
 .delta.up b{color:var(--e1)} .delta.down b{color:var(--e4)} .delta.flat b{color:var(--muted)}
 .endrow.me span{font-weight:700}
+
+.intro{font-size:15px;color:var(--muted);background:var(--soft);border-left:4px solid var(--rc);border-radius:0 8px 8px 0;padding:8px 12px}
+.hsitu{font-size:clamp(17px,1.6vw,20px);line-height:1.6}
+.alt{font-size:15px;background:var(--soft);border-radius:8px;padding:8px 12px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 .joinbar{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
@@ -406,10 +410,13 @@ function hostScene(){
           <div class="stat2"><span class="k">${LET[k]}</span>
             <div class="stxt"><span>${esc(s.o[orig].x)}</span><div class="sbar"><i style="width:${counts[orig]/tot*100}%"></i></div></div>
             <div class="snum"><span class="pct">${done?Math.round(counts[orig]/done*100):0}%</span><span class="cnt">${counts[orig]} 人</span></div></div>`).join("")}</div>
-         <p class="keys">共 ${done} 人作答</p>`;
+         <p class="keys">共 ${done} 人作答</p>
+         <div class="keypt"><b>倫理重點</b>（${esc(s.p)}）<br>${esc(s.k)}</div>`;
     return `<div class="card col ${r}">
       <span class="role-tag" style="align-self:flex-start">${ROLES[r].name}組</span>
-      <h3>${esc(s.t)}</h3>${body}</div>`;
+      <h3>${esc(s.t)}</h3>
+      ${revealed?`<p class="hsitu">${esc(s.x)}</p>${s.alt?`<p class="alt">學生信任不足的人看到的版本：${esc(s.alt)}</p>`:""}`:""}
+      ${body}</div>`;
   };
   const last=i===NS-1;
   return `
@@ -505,6 +512,8 @@ function playerView(){
   if(game.phase==="reveal"){
     return `${head}<div class="row">${steps(i)}</div>
     <div class="card ${rc}"><span class="cap">情境 ${i+1}・${esc(s.t)}</span>
+      <p class="intro">${esc(R.intro)}</p>
+      <p class="pscene">${esc(text)}</p>
       <p><b>你的選擇：</b>${my!=null?`${label(my)}. ${esc(s.o[my].x)}`:"沒有作答"}</p>
       ${my!=null?scorePanel(w,i):""}
       <div class="keypt"><b>倫理重點</b>（${esc(s.p)}）<br>${esc(s.k)}</div>
@@ -514,6 +523,7 @@ function playerView(){
   return `${head}<div class="row">${steps(i)}</div>
   <div class="card ${rc}">
     <span class="cap">情境 ${i+1} / ${NS}・${esc(s.t)}</span>
+    <p class="intro">${esc(R.intro)}</p>
     <p class="pscene">${esc(text)}</p>
     <div class="popts ${locked?"locked":""}">${perm(rc,i).map((orig,k)=>`<button class="popt ${my===orig?"mine":""}" data-ch="${orig}" ${locked?"disabled":""}><span class="k">${LET[k]}</span><span>${esc(s.o[orig].x)}</span></button>`).join("")}</div>
     ${locked?'<p class="muted">已送出，等待主持人公布。</p>':""}
